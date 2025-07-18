@@ -4,8 +4,11 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { RadioGroup } from "../ui/radio-group";
 import { Button } from "../ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from "sonner";
+import { USER_API_POINT } from "../utils/constant";
+import { useDispatch } from "react-redux";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -17,12 +20,11 @@ const Signup = () => {
     logo: null,
   });
   // console.log(formData);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleFormData = (e) => {
-    setFormData(
-      (prevData) =>
-        (prevData = { ...prevData, [e.target.name]: e.target.value })
-    );
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleFileData = (e) => {
@@ -34,30 +36,40 @@ const Signup = () => {
     }
   };
 
-  const handleSubmitData= async(e)=>{
+  const handleSubmitData = async (e) => {
     e.preventDefault();
+    
     const newFormData = new FormData();
-    newFormData.append('fullName',formData.fullName)
-    newFormData.append('email',formData.email)
-    newFormData.append('phoneNumber',formData.phoneNumber)
-    newFormData.append('password',formData.password)
-    newFormData.append('role',formData.role)
-    newFormData.append('logo',formData.logo)
+    newFormData.append("fullName", formData.fullName);
+    newFormData.append("email", formData.email);
+    newFormData.append("phoneNumber", formData.phoneNumber);
+    newFormData.append("password", formData.password);
+    newFormData.append("role", formData.role);
+    if (formData.logo) newFormData.append("logo", formData.logo);
+
     try {
-      const res = await axios.post('http://localhost:5000/api/v1/user/register',newFormData)
-      console.log(res,'response');
-      
+      const res = await axios.post(`${USER_API_POINT}/register`,
+        newFormData,
+        {
+          withCredentials: true,
+        }
+      );
+      console.log(res, "response");
+      if (res.data.success) {
+        navigate("/login");
+        toast.success(res.data.message);
+      }
     } catch (error) {
       console.log(error);
-      
+      toast.error(res.data.message);
     }
-  }
+  };
   return (
     <div>
       <Navbar />
       <div className="flex items-center justify-center mx-auto max-w-7xl">
         <form
-        onSubmit={handleSubmitData}
+          onSubmit={handleSubmitData}
           action=""
           className="w-1/2 border border-gray-200 rounded-md my-2 p-4"
         >

@@ -4,7 +4,10 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { RadioGroup } from "../ui/radio-group";
 import { Button } from "../ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import { USER_API_POINT } from "../utils/constant";
+import axios from "axios";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -13,6 +16,7 @@ const Login = () => {
       role: "",
     });
     // console.log(formData);
+    const navigate = useNavigate();
   
     const handleFormData = (e) => {
       setFormData(
@@ -20,9 +24,21 @@ const Login = () => {
           (prevData = { ...prevData, [e.target.name]: e.target.value })
       );
     };
-  const handleSubmitData=(e)=>{
+  const handleSubmitData= async(e)=>{
     e.preventDefault();
-    console.log(e);
+    try {
+      const res = await axios.post(`${USER_API_POINT}/login`,formData,{
+        withCredentials:true
+      });
+      if(res.data.success){
+        navigate('/');
+        toast.success(res.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(res.data.message)
+      
+    }
     
   }
   return (
