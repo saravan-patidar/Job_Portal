@@ -28,7 +28,7 @@ export const postjob = async (req, res) => {
     ) {
       return res.status(400).json({
         message: "Something is missing",
-        status: false,
+        success: false,
       });
     }
     const job = await Job.create({
@@ -46,7 +46,7 @@ export const postjob = async (req, res) => {
     return res.status(200).json({
       message: "Job created successfully",
       job,
-      status: true,
+      success: true,
     });
   } catch (error) {
     console.log(error);
@@ -67,12 +67,12 @@ export const getAllJobs = async (req, res) => {
     if (!jobs) {
       return res.status(404).json({
         message: "Jobs not found.",
-        status: false,
+        success: false,
       });
     }
     return res.status(200).json({
       jobs,
-      status: true,
+      success: true,
     });
   } catch (error) {
     console.log(error);
@@ -87,12 +87,12 @@ export const getJobById =async(req,res)=>{
         if(!job){
             return res.status(404).json({
                 message:'Jobs not found',
-                status:false
+                success:false
             })
         }
         return res.status(200).json({
             job,
-            status:true
+            success:true
         })
         
     } catch (error) {
@@ -109,11 +109,11 @@ export const getAdminJobs = async(req,res)=>{
         if(!job){
              return res.status(404).json({
                 message:'Jobs not found',
-                status:false
+                success:false
             })
         }
         return res.status(200).json({
-            job,status:true
+            job,success:true
         })
     } catch (error) {
         console.log(error);

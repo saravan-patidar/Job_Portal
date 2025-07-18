@@ -6,14 +6,14 @@ export const registerCompany = async (req, res) => {
     if (!companyName) {
       return res.status(400).json({
         message: "Company name is required!",
-        status: false,
+        success: false,
       });
     }
     let company = await Company.findOne({ name: companyName });
     if (company) {
       return res.status(400).json({
         message: "You can't be register same company.",
-        status: false,
+        success: false,
       });
     }
 
@@ -25,7 +25,7 @@ export const registerCompany = async (req, res) => {
     return res.status(201).json({
       message: "Company register successfully",
       company,
-      status: true,
+      success: true,
     });
   } catch (error) {
     console.log(error);
@@ -39,12 +39,12 @@ export const getCompany = async (req, res) => {
     if (!companies) {
       return res.status(400).json({
         message: "Companies not found",
-        status: false,
+        success: false,
       });
     }
     return res.status(200).json({
       companies,
-      status: true,
+      success: true,
     });
   } catch (error) {
     console.log(error);
@@ -58,12 +58,12 @@ export const getCompanyById = async (req, res) => {
     if (!company) {
       return res.status(400).json({
         message: "Company not found",
-        status: false,
+        success: false,
       });
     }
     return res.status(200).json({
       company,
-      status: true,
+      success: true,
     });
   } catch (error) {
     console.log(error);
@@ -83,12 +83,12 @@ export const updateCompany = async (req, res) => {
     if(!company){
         return res.status(400).json({
         message: "Company not found",
-        status: false,
+        success: false,
       });
     }
     res.status(200).json({
         message:'Company information updated',
-        status:true
+        success:true
     })
   } catch (error) {
     console.log(error);

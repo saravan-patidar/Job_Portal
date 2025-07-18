@@ -7,14 +7,14 @@ const isAuthenticated = async(req,res,next)=>{
         if(!token){
             return res.status(401).json({
                 message:"User not authenticated!",
-                status:false
+                success:false
             })
         }
         const decode = await jwt.verify(token,process.env.SCERET_KEY);
         if(!decode){
             return res.status(401).json({
                 message:"Invalid token!",
-                status:false
+                success:false
             })
         }
         req.id=decode.userId;

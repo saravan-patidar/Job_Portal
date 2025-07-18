@@ -8,7 +8,7 @@ export const applyJob = async (req, res) => {
     if (!jobId) {
       return res.status(400).json({
         message: "Job id is required",
-        status: false,
+        success: false,
       });
     }
     const existingApplication = await Application.findOne({
@@ -18,7 +18,7 @@ export const applyJob = async (req, res) => {
     if (existingApplication) {
       return res.status(400).json({
         message: "You have already applied this job.",
-        status: false,
+        success: false,
       });
     }
     //check if job exits
@@ -26,7 +26,7 @@ export const applyJob = async (req, res) => {
     if (!job) {
       return res.status(400).json({
         message: "Job not found",
-        status: false,
+        success: false,
       });
     }
     //create a new application
@@ -62,12 +62,12 @@ export const getAppliedJobs = async (req, res) => {
     if (!applications) {
       return res.status(400).json({
         message: "No applications",
-        status: false,
+        success: false,
       });
     }
     return res.status(200).json({
       applications,
-      status: true,
+      success: true,
     });
   } catch (error) {
     console.log(error);
@@ -89,12 +89,12 @@ export const getApplicants = async (req, res) => {
     if (!job) {
       return res.status(400).json({
         message: "Job not found",
-        status: false,
+        success: false,
       });
     }
     return res.status(200).json({
         job,
-        status: true,
+        success: true,
       });
   } catch (error) {
     console.log(error);
@@ -110,14 +110,14 @@ export const updateStatus = async(req,res)=>{
         if(!status){
             return res.status(400).json({
                 message:'Status is required',
-                status:false
+                success:false
             })
         }
         const application = await Application.findOne({_id:applicationId});
         if(!application){
             return res.status(400).json({
                 message:'Application not found',
-                status:false
+                success:false
             })
         }
 
@@ -126,7 +126,7 @@ export const updateStatus = async(req,res)=>{
 
         return res.status(200).json({
             message:'Status updated successfully',
-            status:true
+            success:true
         })
     } catch (error) {
         console.log(error);

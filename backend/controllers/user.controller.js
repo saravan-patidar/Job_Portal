@@ -9,7 +9,7 @@ export const register = async (req, res) => {
     if (!fullName || !email || !phoneNumber || !password || !role) {
       return res.status(400).json({
         message: "Something is missing!",
-        status: false,
+        success: false,
       });
     }
     
@@ -17,7 +17,7 @@ export const register = async (req, res) => {
     // if (user) {
     //   return res.status(400).json({
     //     message: "User is already exist with this email!",
-    //     status: false,
+    //     success: false,
     //   });
     // }
     // const hashPassword = await bcrypt.hash(password, 10);
@@ -31,7 +31,7 @@ export const register = async (req, res) => {
 
     return res.status(200).json({
       message: "Account created successfully.",
-      status: true,
+      success: true,
     });
   } catch (err) {
     console.log(err);
@@ -44,7 +44,7 @@ export const login = async (req, res) => {
     if (!email || !password || !role) {
       return res.status(400).json({
         message: "Something is missing!",
-        status: false,
+        success: false,
       });
     }
 
@@ -52,7 +52,7 @@ export const login = async (req, res) => {
     if (!user) {
       return res.status(400).json({
         message: "Incorrect email or password!",
-        status: false,
+        success: false,
       });
     }
 
@@ -60,14 +60,14 @@ export const login = async (req, res) => {
     if (!isPasswordMatch) {
       return res.status(400).json({
         message: "Incorrect email or password!",
-        status: false,
+        success: false,
       });
     }
 
     if (role !== user.role) {
       return res.status(400).json({
         message: "Account doesn't exit with current role",
-        status: "false",
+        success: "false",
       });
     }
 
@@ -95,7 +95,7 @@ export const login = async (req, res) => {
       })
       .json({
         message: `Welcome back ${user.fullName}`,
-        status: true,
+        success: true,
       });
   } catch (error) {
     console.log(error);
@@ -106,7 +106,7 @@ export const logout = async (req, res) => {
   try {
     return res.status(200).cookie("token", "", { maxAge: 0 }).json({
       message: "Logged out successfully!",
-      status: true,
+      success: true,
     });
   } catch (error) {
     console.log(error);
@@ -129,7 +129,7 @@ export const updateProfile = async (req, res) => {
     if (!user) {
       return res.status(400).json({
         message: "User is not found! ",
-        status: false,
+        success: false,
       });
     }
     if (fullName) user.fullName = fullName;
@@ -150,7 +150,7 @@ export const updateProfile = async (req, res) => {
     };
     return res.status(200).json({
       message: "Profile updated successfully!",
-      status: true,
+      success: true,
       user,
     });
   } catch (error) {
