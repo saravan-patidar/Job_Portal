@@ -1,1 +1,1 @@
-export const USER_API_POINT = "htpp://localhost:5000/api/v1/user";
+export const USER_API_POINT = "http://localhost:5000/api/v1/user";

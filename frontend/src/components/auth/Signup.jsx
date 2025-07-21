@@ -8,7 +8,9 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "sonner";
 import { USER_API_POINT } from "../utils/constant";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setLoading } from "../store/authSlice/authSlice";
+import { Loader } from "lucide-react";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -22,6 +24,7 @@ const Signup = () => {
   // console.log(formData);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { loading } = useSelector((state) => state.auth);
 
   const handleFormData = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -38,7 +41,7 @@ const Signup = () => {
 
   const handleSubmitData = async (e) => {
     e.preventDefault();
-    
+
     const newFormData = new FormData();
     newFormData.append("fullName", formData.fullName);
     newFormData.append("email", formData.email);
@@ -48,12 +51,10 @@ const Signup = () => {
     if (formData.logo) newFormData.append("logo", formData.logo);
 
     try {
-      const res = await axios.post(`${USER_API_POINT}/register`,
-        newFormData,
-        {
-          withCredentials: true,
-        }
-      );
+      dispatch(setLoading(true));
+      const res = await axios.post(`${USER_API_POINT}/register`, newFormData, {
+        withCredentials: true,
+      });
       console.log(res, "response");
       if (res.data.success) {
         navigate("/login");
@@ -61,7 +62,9 @@ const Signup = () => {
       }
     } catch (error) {
       console.log(error);
-      toast.error(res.data.message);
+      toast.error(error.response.data.message);
+    } finally {
+      dispatch(setLoading(false));
     }
   };
   return (
@@ -71,7 +74,7 @@ const Signup = () => {
         <form
           onSubmit={handleSubmitData}
           action=""
-          className="w-1/2 border border-gray-200 rounded-md my-2 p-4"
+          className="w-1/2 border border-gray-200 rounded-md my-6 p-4"
         >
           <h1 className="font-bold text-xl mb-5">Sign Up</h1>
           <div className="my-4">
@@ -156,9 +159,17 @@ const Signup = () => {
               />
             </div>
           </div>
-          <Button type="submit" className="w-full my-4">
-            Sign Up
-          </Button>
+          {loading ? (
+            <Button className="w-full my-4">
+              <Loader className="mr-2 w-4 h-4 animate-spin" />
+              Please wait..
+            </Button>
+          ) : (
+            <Button type="submit" className="w-full my-4">
+              Sign Up
+            </Button>
+          )}
+
           <span className="text-sm">
             Already have an account?{" "}
             <Link to="/login" className="text-blue-600">
